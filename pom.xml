@@ -360,8 +360,13 @@
 		    <artifactId>quasar-core</artifactId>
 		    <version>0.4.0</version>
 		</dependency>
-
- 
+ 		<!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->
+		<dependency>
+			<groupId>org.ow2.asm</groupId>
+			<artifactId>asm-all</artifactId>
+			<version>5.1</version>
+		</dependency> 
+		 		
 	</dependencies>
 	<build>
 		<plugins>
