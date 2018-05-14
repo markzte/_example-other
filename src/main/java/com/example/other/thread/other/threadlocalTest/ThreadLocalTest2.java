@@ -1,6 +1,6 @@
 package com.example.other.thread.other.threadlocalTest;
 
-/**ThreadLocal：线程本地变量之---对象引用的副本
+/**ThreadLocal：线程本地变量之---对象引用的副本(这种副本机制是不支持引用的)
  * @author binzhao
  * @date 2017年3月10日
  */
