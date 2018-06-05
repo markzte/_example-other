@@ -15,6 +15,7 @@ public class ThreadLocalTest3 {
 	};
 
 	public static void main(String[] args) throws InterruptedException {
+		
 		Thread[] threads = new Thread[5];
 		for (int j = 0; j < 5; j++) {
 			threads[j] = new Thread(new Runnable() {
