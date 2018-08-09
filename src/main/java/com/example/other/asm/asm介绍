@@ -9,5 +9,50 @@ ASM框架中的核心类有以下几个：
 ①  ClassReader:该类用来解析编译过的class字节码文件。
 
 ②  ClassWriter:该类用来重新构建编译后的类，比如说修改类名、属性以及方法，甚至可以生成新的类的字节码文件。
+		通过其visitMethod方法添加构造方法、普通方法
 
 ③  ClassAdapter:该类也实现了ClassVisitor接口，它将对它的方法调用委托给另一个ClassVisitor对象。
+
+
+
+=======================================ClassWriter示例========================
+public static void main(String[] args) throws Exception {  
+    ClassWriter cw = new ClassWriter(0);  
+    PrintWriter printWriter = new PrintWriter(System.out);  
+    TraceClassVisitor visitor = new TraceClassVisitor(cw, printWriter);  
+  
+    visitor.visit(V1_5, ACC_PUBLIC, "asm/demo/AddOperImpl", null, "java/lang/Object", new String[]{"asm/demo/AddOper"});  
+  
+    //添加构造方法  
+    MethodVisitor mv = visitor.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);  
+    mv.visitCode();  
+    mv.visitVarInsn(ALOAD, 0);  
+    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V");  
+    mv.visitInsn(RETURN);  
+    mv.visitMaxs(1, 1);  
+    mv.visitEnd();  
+  
+    // 添加add方法  
+    mv = visitor.visitMethod(ACC_PUBLIC, "add", "(II)I", null, null);  
+    mv.visitCode();  
+    mv.visitVarInsn(ILOAD, 1);  
+    mv.visitVarInsn(ILOAD, 2);  
+    mv.visitInsn(IADD);  
+    mv.visitInsn(IRETURN);  
+    mv.visitMaxs(2, 3);  
+    mv.visitEnd();  
+  
+    visitor.visitEnd();  
+  
+    FileOutputStream fos = new FileOutputStream(new File("D:/code/asmdemo/out/production/asmdemo/asm/demo/AddOperImpl.class"));  
+    fos.write(cw.toByteArray());  
+    fos.close();  
+}  
+
+调用add方法结果如预期：
+MyClassLoader classLoader = new MyClassLoader();  
+Class<?> clazz = classLoader.defineClass("asm.demo.AddOperImpl", cw.toByteArray());  
+Method addMethod = clazz.getMethod("add", int.class, int.class);  
+Object result = addMethod.invoke(clazz.newInstance(), 10, 20);  
+if(result != null && result instanceof Integer)  
+	System.out.println((Integer) result);  

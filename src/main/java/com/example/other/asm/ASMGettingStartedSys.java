@@ -4,7 +4,9 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-/**示例一：这里打算用ASM动态生成如下的类
+/**ClassWriter重新构建编译后的类
+ * 示例一： 这里打算用ASM动态生成如下的类
+ * 
  * package com.agent.my3;
  * public class Tester
  * {
@@ -26,9 +28,8 @@ public class ASMGettingStartedSys {
 		cw.visit(Opcodes.V1_7, Opcodes.ACC_PUBLIC, className, null,
 				"java/lang/Object", null);
 
-		// 初始化一个无参的构造函数
-		MethodVisitor constructor = cw.visitMethod(Opcodes.ACC_PUBLIC,
-				"<init>", "()V", null, null);
+		//添加无参构造方法
+		MethodVisitor constructor = cw.visitMethod(Opcodes.ACC_PUBLIC,"<init>", "()V", null, null);
 		// 这里请看截图
 		constructor.visitVarInsn(Opcodes.ALOAD, 0);
 		// 执行父类的init初始化
